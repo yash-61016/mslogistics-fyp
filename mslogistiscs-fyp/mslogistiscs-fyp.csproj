@@ -38,14 +38,4 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Valueobjects\Enums\ServerLogEventId.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Valueobjects\Enums\ServerLogEventId.cs">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Compile>
-  </ItemGroup>
 </Project>

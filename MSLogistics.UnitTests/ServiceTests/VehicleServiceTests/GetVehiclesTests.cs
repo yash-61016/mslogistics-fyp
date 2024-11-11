@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MSLogistics.Application.Repositories.IVehicleRepository;
@@ -10,13 +9,13 @@ using Xunit;
 
 namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
 {
-	public class GetVehicles
+	public class GetVehiclesTest
 	{
         private readonly VehicleService _vehicleService;
         private readonly Mock<IVehicleRepository> _vehicleRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
 
-        public GetVehicles()
+        public GetVehiclesTest()
         {
             _vehicleRepositoryMock = new Mock<IVehicleRepository>();
             _mapperMock = new Mock<IMapper>();
