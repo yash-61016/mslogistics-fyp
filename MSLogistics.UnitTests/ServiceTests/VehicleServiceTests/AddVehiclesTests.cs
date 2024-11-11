@@ -14,13 +14,13 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
         private readonly VehicleService _vehicleService;
         private readonly Mock<IVehicleRepository> _vehicleRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<ILogger> _loggerMock;
+        private readonly Mock<ILogger<VehicleService>> _loggerMock;
 
         public AddVehiclesTests()
         {
             _vehicleRepositoryMock = new Mock<IVehicleRepository>();
             _mapperMock = new Mock<IMapper>();
-            _loggerMock = new Mock<ILogger>();
+            _loggerMock = new Mock<ILogger<VehicleService>>();
             _vehicleService = new VehicleService(_vehicleRepositoryMock.Object, _mapperMock.Object, _loggerMock.Object);
         }
 

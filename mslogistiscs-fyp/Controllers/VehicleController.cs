@@ -89,7 +89,7 @@ namespace mslogistiscs_fyp.Controllers
         }
 
         // PUT Vehicle/UpdateVehicles:List<VehicleDto>() (Pass the Dto as List)
-        [HttpPut("{id}")]
+        [HttpPut]
         [Route("UpdateVehicles")]
         public async Task<IActionResult> UpdateVehicles([FromBody] List<VehicleDto> vehiclesToUpdate)
         {
@@ -117,7 +117,7 @@ namespace mslogistiscs_fyp.Controllers
         }
 
         // DELETE Vehicle/DeleteVehicles:List<Guid>() (Pass the list of selected ids)
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Route("DeleteVehicles")]
         public async Task<IActionResult> DeleteVehicles([FromBody] List<Guid> ids)
         {

@@ -20,7 +20,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             _vehicleRepositoryMock = new Mock<IVehicleRepository>();
             _mapperMock = new Mock<IMapper>();
 
-            _vehicleService = new VehicleService(_vehicleRepositoryMock.Object, _mapperMock.Object, Mock.Of<ILogger>());
+            _vehicleService = new VehicleService(_vehicleRepositoryMock.Object, _mapperMock.Object, Mock.Of<ILogger<VehicleService>>());
         }
 
         [Fact]

@@ -11,10 +11,10 @@ namespace MSLogistics.Application.Services.VehicleService
 	{
         private readonly IVehicleRepository _vehicleRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+        private readonly ILogger<VehicleService> _logger;
 
 		public VehicleService(IVehicleRepository vehicleRepository,
-            IMapper mapper, ILogger logger)
+            IMapper mapper, ILogger<VehicleService> logger)
 		{
             _vehicleRepository = vehicleRepository;
             _mapper = mapper;
