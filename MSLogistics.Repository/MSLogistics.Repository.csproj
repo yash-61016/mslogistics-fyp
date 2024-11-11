@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="BaseRepository\" />
+    <None Remove="ValueObjects\" />
+    <None Remove="ValueObjects\Enums\" />
+    <None Remove="VehicleRepository\" />
+    <None Remove="StopRepository\" />
+    <None Remove="RouteRepository\" />
+    <None Remove="DispatchGroupRepository\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BaseRepository\" />
+    <Folder Include="ValueObjects\" />
+    <Folder Include="ValueObjects\Enums\" />
+    <Folder Include="VehicleRepository\" />
+    <Folder Include="StopRepository\" />
+    <Folder Include="RouteRepository\" />
+    <Folder Include="DispatchGroupRepository\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MSLogistics.Application\MSLogistics.Application.csproj" />
+    <ProjectReference Include="..\MSLogistics.Domain\MSLogistics.Domain.csproj" />
+    <ProjectReference Include="..\MSLogistics.Persistence\MSLogistics.Persistence.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
+  </ItemGroup>
+</Project>

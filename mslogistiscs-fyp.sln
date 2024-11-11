@@ -5,6 +5,16 @@ VisualStudioVersion = 25.0.1706.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mslogistiscs-fyp", "mslogistiscs-fyp\mslogistiscs-fyp.csproj", "{94F84348-012C-4EB1-8197-540680B3A33D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSLogistics.Application", "MSLogistics.Application\MSLogistics.Application.csproj", "{6D78620D-ACCA-42BD-8EC0-356864D61777}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSLogistics.Persistence", "MSLogistics.Persistence\MSLogistics.Persistence.csproj", "{DB70187B-F466-4F18-88BB-54E22810CE4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSLogistics.Domain", "MSLogistics.Domain\MSLogistics.Domain.csproj", "{91411B54-23F8-4FA8-9242-801A9898B456}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSLogistics.Repository", "MSLogistics.Repository\MSLogistics.Repository.csproj", "{7F771F37-519F-477E-B26F-73A1E26288EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSLogistics.UnitTests", "MSLogistics.UnitTests\MSLogistics.UnitTests.csproj", "{948BFEAE-E097-4FCD-9972-B4A13E0112BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,26 @@ Global
 		{94F84348-012C-4EB1-8197-540680B3A33D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94F84348-012C-4EB1-8197-540680B3A33D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94F84348-012C-4EB1-8197-540680B3A33D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D78620D-ACCA-42BD-8EC0-356864D61777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D78620D-ACCA-42BD-8EC0-356864D61777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D78620D-ACCA-42BD-8EC0-356864D61777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D78620D-ACCA-42BD-8EC0-356864D61777}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB70187B-F466-4F18-88BB-54E22810CE4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB70187B-F466-4F18-88BB-54E22810CE4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB70187B-F466-4F18-88BB-54E22810CE4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB70187B-F466-4F18-88BB-54E22810CE4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91411B54-23F8-4FA8-9242-801A9898B456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91411B54-23F8-4FA8-9242-801A9898B456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91411B54-23F8-4FA8-9242-801A9898B456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91411B54-23F8-4FA8-9242-801A9898B456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F771F37-519F-477E-B26F-73A1E26288EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F771F37-519F-477E-B26F-73A1E26288EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F771F37-519F-477E-B26F-73A1E26288EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F771F37-519F-477E-B26F-73A1E26288EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948BFEAE-E097-4FCD-9972-B4A13E0112BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948BFEAE-E097-4FCD-9972-B4A13E0112BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948BFEAE-E097-4FCD-9972-B4A13E0112BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948BFEAE-E097-4FCD-9972-B4A13E0112BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,26 +1,54 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿
+using MSLogistics.Application.Logging.Providers;
+using mslogistiscs_fyp;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace UNITY_Lite.Server
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            IHost host = CreateHostBuilder(args).Build();
+
+            host.Run();
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        var env = hostingContext.HostingEnvironment;
+                        config.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
+                    });
+
+                    webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(logging =>
+                {
+                    // clear default logging providers
+                    logging.ClearProviders();
+
+                    // Create log file directory if it doesn't exist
+                    var logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+                    if (!Directory.Exists(logFilePath))
+                    {
+                        Directory.CreateDirectory(logFilePath);
+                    }
+                    // File Limit
+                    long maxLogFileSize = 50 * 1024 * 1024; // 50MB 
+
+                    // Custom error log file
+                    string logErrorFilePathWithFileName = Path.Combine(logFilePath, "Errors.log");
+
+                    if (!File.Exists(logErrorFilePathWithFileName))
+                    {
+                        File.Create(logErrorFilePathWithFileName).Close();
+                    }
+
+                    var errorFileLoggerProvider = new ErrorFileLoggerProvider(logErrorFilePathWithFileName, maxLogFileSize);
+                    logging.AddProvider(errorFileLoggerProvider);
+                });
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
-
