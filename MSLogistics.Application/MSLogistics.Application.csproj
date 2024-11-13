@@ -24,6 +24,8 @@
     <None Remove="ValueObjects\DTOs\Vehicle\" />
     <None Remove="MapperProfile\" />
     <None Remove="Exceptions\" />
+    <None Remove="ValueObjects\DTOs\Stop\" />
+    <None Remove="Services\StopService\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logging\" />
@@ -43,6 +45,8 @@
     <Folder Include="ValueObjects\DTOs\Vehicle\" />
     <Folder Include="MapperProfile\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="ValueObjects\DTOs\Stop\" />
+    <Folder Include="Services\StopService\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />

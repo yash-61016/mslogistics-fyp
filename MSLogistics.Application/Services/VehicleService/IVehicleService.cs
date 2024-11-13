@@ -37,7 +37,6 @@ namespace MSLogistics.Application.Services.VehicleService
         /// <param name="vehicleList">The collection of vehicles to update.</param>
         /// <returns>A Task that represents the asynchronous operation. The task result is true if the vehicle(s) were successfully updated; otherwise, false.</returns>
         public Task<bool> UpdateVehicles(IEnumerable<VehicleDto> vehicleList);
-
     }
 }
 

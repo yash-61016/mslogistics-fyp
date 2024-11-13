@@ -1,76 +1,76 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSLogistics.Application.Exceptions;
-using MSLogistics.Application.Services.VehicleService;
-using MSLogistics.Application.ValueObjects.DTOs.Vehicle;
+using MSLogistics.Application.Services.StopService;
+using MSLogistics.Application.ValueObjects.DTOs.Stop;
 using mslogistiscs_fyp.ValueObjects.Enums;
 
 namespace mslogistiscs_fyp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class VehicleController : Controller
+    public class StopController : Controller
     {
-        private readonly IVehicleService _vehicleService;
-        private readonly ILogger<VehicleController> _logger;
+        private readonly IStopService _stopService;
+        private readonly ILogger<StopController> _logger;
 
-        public VehicleController(IVehicleService vehicleService,
-            ILogger<VehicleController> logger)
+        public StopController(IStopService stopService,
+            ILogger<StopController> logger)
         {
-            _vehicleService = vehicleService;
+            _stopService = stopService;
             _logger = logger;
         }
 
-        // GET: Vehicle/GetVehicles
+        // GET: Stop/GetStops
         [HttpGet]
-        [Route("GetVehicles")]
-        public async Task<IActionResult> GetVehicles()
+        [Route("GetStops")]
+        public async Task<IActionResult> GetStops()
         {
             try
             {
-                IEnumerable<VehicleDto> vehicles = await _vehicleService.GetVehicles();
+                IEnumerable<StopDto> stops = await _stopService.GetStops();
 
-                return Ok(vehicles);
+                return Ok(stops);
             }
             catch (Exception ex)
             {
                 _logger.LogError((int)ServerLogEventId.UnknownError,
-                    $"Unexpected exception was caught in VehicleController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+                    $"Unexpected exception was caught in StopController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
 
                 return StatusCode(500, "An unknown error occurred on the server.");
             }
         }
 
-        // GET Vehicle/GetVehicleById:34243sdf2-234324fd23-32bdabb (Guid)
+        // GET Stop/GetStopById:34243sdf2-234324fd23-32bdabb (Guid)
         [HttpGet]
-        [Route("GetVehicleById")]
-        public async Task<IActionResult> GetVehicleById(Guid Id)
+        [Route("GetStopById")]
+        public async Task<IActionResult> GetStopById(Guid Id)
         {
             try
             {
-                VehicleDto vehicle = await _vehicleService.GetVehicleById(Id);
+                StopDto stop = await _stopService.GetStopById(Id);
 
-                return Ok(vehicle);
+                return Ok(stop);
             }
             catch (Exception ex)
             {
                 _logger.LogError((int)ServerLogEventId.UnknownError,
-                    $"Unexpected exception was caught in VehicleController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+                    $"Unexpected exception was caught in StopController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
 
                 return StatusCode(500, "An unknown error occurred on the server.");
             }
         }
 
-        // POST Vehicle/AddVehicles:List<VehicleDto>() (Pass the Dto as List)
+        // POST Stop/AddStops:List<StopDto>() (Pass the Dto as List)
         [HttpPost]
-        [Route("AddVehicles")]
-        public async Task<IActionResult> AddVehicles([FromBody] List<VehicleDto> vehiclesToAdd)
+        [Route("AddStops")]
+        public async Task<IActionResult> AddStops([FromBody] List<StopDto> stopsToAdd)
         {
             try
             {
-                if (vehiclesToAdd.Count <= 0)
+                if (stopsToAdd.Count <= 0)
                     throw new RequiredInformationMissingException();
 
-                var result = await _vehicleService.AddVehicles(vehiclesToAdd);
+                var result = await _stopService.AddStops(stopsToAdd);
 
                 return Ok(result);
             }
@@ -82,23 +82,23 @@ namespace mslogistiscs_fyp.Controllers
             {
                 _logger.LogError(
                     (int)ServerLogEventId.UnknownError,
-                    $"Unexpected exception was caught in VehicleController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+                    $"Unexpected exception was caught in StopController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
 
                 return StatusCode(500, "An unknown error occurred on the server.");
             }
         }
 
-        // PUT Vehicle/UpdateVehicles:List<VehicleDto>() (Pass the Dto as List)
+        // PUT Stop/UpdateStops:List<StopDto>() (Pass the Dto as List)
         [HttpPut]
-        [Route("UpdateVehicles")]
-        public async Task<IActionResult> UpdateVehicles([FromBody] List<VehicleDto> vehiclesToUpdate)
+        [Route("UpdateStops")]
+        public async Task<IActionResult> UpdateStops([FromBody] List<StopDto> stopsToUpdate)
         {
             try
             {
-                if (vehiclesToUpdate.Count <= 0)
+                if (stopsToUpdate.Count <= 0)
                     throw new RequiredInformationMissingException();
 
-                var result = await _vehicleService.UpdateVehicles(vehiclesToUpdate);
+                var result = await _stopService.UpdateStops(stopsToUpdate);
 
                 return Ok(result);
             }
@@ -110,13 +110,13 @@ namespace mslogistiscs_fyp.Controllers
             {
                 _logger.LogError(
                     (int)ServerLogEventId.UnknownError,
-                    $"Unexpected exception was caught in VehicleController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+                    $"Unexpected exception was caught in StopController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
 
                 return StatusCode(500, "An unknown error occurred on the server.");
             }
         }
 
-        // DELETE Vehicle/DeleteVehicles:List<Guid>() (Pass the list of selected ids)
+        // DELETE Stop/DeleteStops:List<Guid>() (Pass the list of selected ids)
         [HttpDelete]
         [Route("DeleteVehicles")]
         public async Task<IActionResult> DeleteVehicles([FromBody] List<Guid> ids)
@@ -126,7 +126,7 @@ namespace mslogistiscs_fyp.Controllers
                 if (ids.Count <= 0)
                     throw new RequiredInformationMissingException();
 
-                var result = await _vehicleService.DeleteVehicles(ids);
+                var result = await _stopService.DeleteStops(ids);
 
                 return Ok(result);
             }
@@ -138,7 +138,7 @@ namespace mslogistiscs_fyp.Controllers
             {
                 _logger.LogError(
                     (int)ServerLogEventId.UnknownError,
-                    $"Unexpected exception was caught in VehicleController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+                    $"Unexpected exception was caught in StopController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
 
                 return StatusCode(500, "An unknown error occurred on the server.");
             }

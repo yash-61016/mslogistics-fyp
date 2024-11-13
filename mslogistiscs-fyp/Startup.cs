@@ -45,6 +45,7 @@ namespace mslogistiscs_fyp
             services.AddTransient<IDispatchGroupRepository, DispatchGroupRepository>();
             //Services
             services.AddTransient<IVehicleService, VehicleService>();
+            services.AddTransient<IStopRepository, StopRepository>();
 
             //SQL Db Context Configuration
             services.AddDbContext<DomainContext>(options =>
