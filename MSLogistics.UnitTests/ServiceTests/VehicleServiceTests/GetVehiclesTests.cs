@@ -29,14 +29,14 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Arrange
             var vehicles = new List<Vehicle>
             {
-                new Vehicle { Id = Guid.NewGuid(), RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" },
-                new Vehicle { Id = Guid.NewGuid(), RegisterationNumber = "XYZ789", LoadCapacity = 2000, VehicleModel = "Model Z", VehicleMake = "Make W" }
+                new Vehicle { Id = Guid.NewGuid(), RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" },
+                new Vehicle { Id = Guid.NewGuid(), RegistrationNumber = "XYZ789", LoadCapacity = 2000, VehicleModel = "Model Z", VehicleMake = "Make W" }
             };
 
             var vehicleDtos = new List<VehicleDto>
             {
-                new VehicleDto { Id = vehicles[0].Id, RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" },
-                new VehicleDto { Id = vehicles[1].Id, RegisterationNumber = "XYZ789", LoadCapacity = 2000, VehicleModel = "Model Z", VehicleMake = "Make W" }
+                new VehicleDto { Id = vehicles[0].Id, RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" },
+                new VehicleDto { Id = vehicles[1].Id, RegistrationNumber = "XYZ789", LoadCapacity = 2000, VehicleModel = "Model Z", VehicleMake = "Make W" }
             };
 
             _vehicleRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(vehicles);
@@ -84,12 +84,12 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Arrange
             var vehicles = new List<Vehicle>
             {
-                new Vehicle { Id = Guid.NewGuid(), RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new Vehicle { Id = Guid.NewGuid(), RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             var vehicleDtos = new List<VehicleDto>
             {
-                new VehicleDto { Id = vehicles[0].Id, RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new VehicleDto { Id = vehicles[0].Id, RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             _vehicleRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(vehicles);
@@ -101,7 +101,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Assert
             Assert.Single(result);
             Assert.Equal(vehicleDtos.First().Id, result.First().Id);
-            Assert.Equal(vehicleDtos.First().RegisterationNumber, result.First().RegisterationNumber);
+            Assert.Equal(vehicleDtos.First().RegistrationNumber, result.First().RegistrationNumber);
             Assert.Equal(vehicleDtos.First().LoadCapacity, result.First().LoadCapacity);
             Assert.Equal(vehicleDtos.First().VehicleModel, result.First().VehicleModel);
             Assert.Equal(vehicleDtos.First().VehicleMake, result.First().VehicleMake);

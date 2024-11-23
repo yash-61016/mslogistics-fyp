@@ -11,6 +11,12 @@ namespace MSLogistics.Application.Services.StopService
         Task<IEnumerable<StopDto>> GetStops();
 
         /// <summary>
+        /// Retrieves all stops with no routes.
+        /// </summary>
+        /// <returns>A collection of StopDto representing all stops which has no routes attached.</returns>
+        Task<IEnumerable<StopDto>> GetStopsWithNoRoutes();
+
+        /// <summary>
         /// Retrieves a specific stop by its unique identifier.
         /// </summary>
         /// <param name="Id">The unique identifier of the stop.</param>

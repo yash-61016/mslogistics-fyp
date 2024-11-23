@@ -5,7 +5,7 @@ namespace MSLogistics.Domain
 	public class Vehicle : BaseEntity<Guid>
 	{
 		[StringLength(20)]
-		public string? RegisterationNumber { get; set; }
+		public string? RegistrationNumber { get; set; }
 
         public decimal LoadCapacity { get; set; }
 

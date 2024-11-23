@@ -105,6 +105,15 @@ namespace MSLogistics.Application.Services.StopService
             return stopsDtos ?? new List<StopDto>();
         }
 
+        public async Task<IEnumerable<StopDto>> GetStopsWithNoRoutes()
+        {
+            IEnumerable<Stop> stops = await _stopRepository.GetAllAsync() ?? new List<Stop>();
+
+            IEnumerable<StopDto> stopsDtos = _mapper.Map<IEnumerable<StopDto>>(stops.Where(s =>s.RouteId == null));
+
+            return stopsDtos ?? new List<StopDto>();
+        }
+
         public async Task<bool> UpdateStops(IEnumerable<StopDto> stopsList)
         {
             if (stopsList == null || !stopsList.Any())

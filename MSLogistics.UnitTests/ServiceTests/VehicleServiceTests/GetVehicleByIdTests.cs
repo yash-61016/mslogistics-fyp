@@ -30,7 +30,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             var vehicle = new Vehicle
             {
                 Id = vehicleId,
-                RegisterationNumber = "ABC123",
+                RegistrationNumber = "ABC123",
                 LoadCapacity = 1000,
                 VehicleModel = "Model X",
                 VehicleMake = "Make Y"
@@ -39,7 +39,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             var vehicleDto = new VehicleDto
             {
                 Id = vehicleId,
-                RegisterationNumber = "ABC123",
+                RegistrationNumber = "ABC123",
                 LoadCapacity = 1000,
                 VehicleModel = "Model X",
                 VehicleMake = "Make Y"
@@ -54,7 +54,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(vehicleDto.Id, result.Id);
-            Assert.Equal(vehicleDto.RegisterationNumber, result.RegisterationNumber);
+            Assert.Equal(vehicleDto.RegistrationNumber, result.RegistrationNumber);
             Assert.Equal(vehicleDto.LoadCapacity, result.LoadCapacity);
             Assert.Equal(vehicleDto.VehicleModel, result.VehicleModel);
             Assert.Equal(vehicleDto.VehicleMake, result.VehicleMake);
@@ -75,7 +75,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(Guid.Empty, result.Id);
-            Assert.Null(result.RegisterationNumber);
+            Assert.Null(result.RegistrationNumber);
             Assert.Equal(0, result.LoadCapacity);
             Assert.Null(result.VehicleModel);
             Assert.Null(result.VehicleMake);
@@ -107,7 +107,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             var mappedVehicleDto = new VehicleDto
             {
                 Id = Guid.Empty,
-                RegisterationNumber = null,
+                RegistrationNumber = null,
                 LoadCapacity = 0,
                 VehicleModel = null,
                 VehicleMake = null
@@ -121,7 +121,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
 
             // Assert
             Assert.Equal(Guid.Empty, result.Id);
-            Assert.Null(result.RegisterationNumber);
+            Assert.Null(result.RegistrationNumber);
             Assert.Equal(0, result.LoadCapacity);
             Assert.Null(result.VehicleModel);
             Assert.Null(result.VehicleMake);

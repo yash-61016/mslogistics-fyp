@@ -40,6 +40,26 @@ namespace mslogistiscs_fyp.Controllers
             }
         }
 
+        // GET: Stop/GetStopsWithNoRoutes
+        [HttpGet]
+        [Route("GetStopsWithNoRoutes")]
+        public async Task<IActionResult> GetStopsWithNoRoutes()
+        {
+            try
+            {
+                IEnumerable<StopDto> stops = await _stopService.GetStopsWithNoRoutes();
+
+                return Ok(stops);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError((int)ServerLogEventId.UnknownError,
+                    $"Unexpected exception was caught in StopController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "An unknown error occurred on the server.");
+            }
+        }
+
         // GET Stop/GetStopById:34243sdf2-234324fd23-32bdabb (Guid)
         [HttpGet]
         [Route("GetStopById")]
@@ -118,8 +138,8 @@ namespace mslogistiscs_fyp.Controllers
 
         // DELETE Stop/DeleteStops:List<Guid>() (Pass the list of selected ids)
         [HttpDelete]
-        [Route("DeleteVehicles")]
-        public async Task<IActionResult> DeleteVehicles([FromBody] List<Guid> ids)
+        [Route("DeleteStops")]
+        public async Task<IActionResult> DeleteStops([FromBody] List<Guid> ids)
         {
             try
             {

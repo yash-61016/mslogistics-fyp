@@ -9,6 +9,8 @@ namespace MSLogistics.Application.ValueObjects.DTOs.Stop
         [StringLength(20)]
         public string? Name { get; set; }
 
+        public int Sequencenumber { get; set; }
+
         public Guid CustomerId { get; set; }
     }
 }

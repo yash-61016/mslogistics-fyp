@@ -56,12 +56,12 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Arrange
             var vehicleList = new List<VehicleDto>
             {
-                new VehicleDto { RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new VehicleDto { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             var vehicleEntities = new List<Vehicle>
             {
-                new Vehicle { RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new Vehicle { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);
@@ -81,12 +81,12 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Arrange
             var vehicleList = new List<VehicleDto>
             {
-                new VehicleDto { RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new VehicleDto { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             var vehicleEntities = new List<Vehicle>
             {
-                new Vehicle { RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new Vehicle { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);
@@ -108,12 +108,12 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Arrange
             var vehicleList = new List<VehicleDto>
             {
-                new VehicleDto { RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new VehicleDto { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             var vehicleEntities = new List<Vehicle>
             {
-                new Vehicle { RegisterationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+                new Vehicle { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
             };
 
             _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);

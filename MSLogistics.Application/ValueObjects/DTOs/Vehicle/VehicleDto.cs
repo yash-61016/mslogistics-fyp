@@ -8,7 +8,7 @@ namespace MSLogistics.Application.ValueObjects.DTOs.Vehicle
         public Guid Id { get; set; }
 
         [StringLength(20)]
-        public string? RegisterationNumber { get; set; }
+        public string? RegistrationNumber { get; set; }
 
         public decimal LoadCapacity { get; set; }
 

@@ -8,9 +8,10 @@ namespace MSLogistics.Domain
 		[StringLength(30)]
 		public string? Name { get; set; }
 
-		public Vehicle? Vehicle { get; set; }
+        public Guid? VehicleId { get; set; }
+
+        public Vehicle? Vehicle { get; set; }
 
 		public IEnumerable<Stop> Stops { get; set; } = new List<Stop>();
 	}
 }
-

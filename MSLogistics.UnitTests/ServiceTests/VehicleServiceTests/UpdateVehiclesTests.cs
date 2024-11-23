@@ -74,8 +74,8 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Arrange
             var vehicleDtos = new List<VehicleDto>
             {
-                new VehicleDto { Id = Guid.NewGuid(), RegisterationNumber = "ABC123" },
-                new VehicleDto { Id = Guid.NewGuid(), RegisterationNumber = "DEF456" }
+                new VehicleDto { Id = Guid.NewGuid(), RegistrationNumber = "ABC123" },
+                new VehicleDto { Id = Guid.NewGuid(), RegistrationNumber = "DEF456" }
             };
             var vehicles = vehicleDtos.Select(dto => new Vehicle { Id = dto.Id }).ToList();
 
