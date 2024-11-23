@@ -133,7 +133,7 @@ namespace MSLogistics.Application.Services.RouteService
 
                     if (existingRoute == null)
                     {
-                        _logger.LogError((int)LogEventId.DataAccessError, $"Failed to retrive existing route for updating from database.");
+                        _logger.LogError((int)LogEventId.DataAccessError, "Failed to retrive existing route for updating from database.");
                         continue;
                     }
 
@@ -149,7 +149,7 @@ namespace MSLogistics.Application.Services.RouteService
                 }
                 else
                 {
-                    _logger.LogError((int)LogEventId.DataAccessError, "No valid stops found to update.");
+                    _logger.LogError((int)LogEventId.DataAccessError, "No valid routes found to update.");
                     return false;
                 }
             }
