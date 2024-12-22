@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MSLogistics.Application.ValueObjects.DTOs.DispatchGroups;
 using MSLogistics.Application.ValueObjects.DTOs.Route;
 using MSLogistics.Application.ValueObjects.DTOs.Stop;
 using MSLogistics.Application.ValueObjects.DTOs.Vehicle;
@@ -10,14 +11,17 @@ namespace MSLogistics.Application.MapperProfile
 	{
 		public ObjectsMapper()
 		{
-			//Vehicle mapper
+			//Vehicles
             CreateMap<VehicleDto, Vehicle>().ReverseMap();
 
             //Stops
             CreateMap<StopDto, Stop>().ReverseMap();
 
-            //Stops
+            //Routes
             CreateMap<RouteDto, Route>().ReverseMap();
+
+            //DispatchGroups
+            CreateMap<DispatchGroupDto, DispatchGroup>().ReverseMap();
         }
 	}
 }

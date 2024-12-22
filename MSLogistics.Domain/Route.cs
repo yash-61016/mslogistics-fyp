@@ -9,9 +9,11 @@ namespace MSLogistics.Domain
 		public string? Name { get; set; }
 
         public Guid? VehicleId { get; set; }
-
         public Vehicle? Vehicle { get; set; }
 
-		public IEnumerable<Stop> Stops { get; set; } = new List<Stop>();
+        public Guid? DispatchGroupId { get; set; }
+        public DispatchGroup? DispatchGroup { get; set; }
+
+        public IEnumerable<Stop> Stops { get; set; } = new List<Stop>();
 	}
 }

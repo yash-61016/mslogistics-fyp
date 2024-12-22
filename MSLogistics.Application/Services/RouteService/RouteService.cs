@@ -92,7 +92,8 @@ namespace MSLogistics.Application.Services.RouteService
         {
             Route route = await _routeRepository.GetRoutesByIdWithIncludesAsync(Id,
                 route => route.Vehicle,
-                route => route.Stops) ?? new Route(); ;
+                route => route.DispatchGroup,
+                route => route.Stops) ?? new Route(); 
 
             // Map the routes to RouteDtos
             RouteDto routeDtos = _mapper.Map<RouteDto>(route);
@@ -106,6 +107,7 @@ namespace MSLogistics.Application.Services.RouteService
             // Retrieve all routes with their associated Vehicles and Stops
             IEnumerable<Route> routes = await _routeRepository.GetAllWithIncludesAsync(
                 route => route.Vehicle,
+                route => route.DispatchGroup,
                 route => route.Stops) ?? new List<Route>();
 
             // Map the routes to RouteDtos

@@ -7,6 +7,7 @@ namespace MSLogistics.Application.ValueObjects.DTOs.Route
 	public class RouteDto
 	{
         public Guid Id { get; set; }
+
         [StringLength(30)]
         public string? Name { get; set; }
 

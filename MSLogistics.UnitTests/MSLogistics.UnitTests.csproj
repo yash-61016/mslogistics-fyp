@@ -28,12 +28,14 @@
     <None Remove="ServiceTests\VehicleServiceTests\" />
     <None Remove="ServiceTests\StopServiceTests\" />
     <None Remove="ServiceTests\RouteServiceTests\" />
+    <None Remove="ServiceTests\DispatchGroupServiceTests\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ServiceTests\" />
     <Folder Include="ServiceTests\VehicleServiceTests\" />
     <Folder Include="ServiceTests\StopServiceTests\" />
     <Folder Include="ServiceTests\RouteServiceTests\" />
+    <Folder Include="ServiceTests\DispatchGroupServiceTests\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MSLogistics.Application\MSLogistics.Application.csproj" />

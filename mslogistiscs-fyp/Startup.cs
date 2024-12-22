@@ -7,6 +7,7 @@ using MSLogistics.Application.Repositories.IDispatchGroupRepository;
 using MSLogistics.Application.Repositories.IRouteRepository;
 using MSLogistics.Application.Repositories.IStopRepository;
 using MSLogistics.Application.Repositories.IVehicleRepository;
+using MSLogistics.Application.Services.DispatchGroupService;
 using MSLogistics.Application.Services.RouteService;
 using MSLogistics.Application.Services.StopService;
 using MSLogistics.Application.Services.VehicleService;
@@ -48,6 +49,7 @@ namespace mslogistiscs_fyp
             services.AddTransient<IVehicleService, VehicleService>();
             services.AddTransient<IStopService, StopService>();
             services.AddTransient<IRouteService, RouteService>();
+            services.AddTransient<IDispatchGroupService, DispatchGroupService>();
 
             //SQL Db Context Configuration
             services.AddDbContext<DomainContext>(options =>
