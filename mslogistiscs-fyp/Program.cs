@@ -1,8 +1,7 @@
 ﻿
 using MSLogistics.Application.Logging.Providers;
-using mslogistiscs_fyp;
 
-namespace UNITY_Lite.Server
+namespace mslogistiscs_fyp
 {
     public class Program
     {
