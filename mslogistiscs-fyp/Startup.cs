@@ -2,6 +2,7 @@
 
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MSLogistics.Application.MapperProfile;
 using MSLogistics.Application.Repositories.IDispatchGroupRepository;
 using MSLogistics.Application.Repositories.IRouteRepository;
@@ -52,9 +53,14 @@ namespace mslogistiscs_fyp
             services.AddTransient<IDispatchGroupService, DispatchGroupService>();
 
             //SQL Db Context Configuration
+            //services.AddDbContext<DomainContext>(options =>
+            //    options.UseNpgsql(
+            //        Configuration.GetConnectionString("ConnectionString")));
+
             services.AddDbContext<DomainContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("ConnectionString")));
+              options.UseNpgsql(
+                  Configuration.GetConnectionString("ConnectionString"),
+                  x => x.MigrationsAssembly("MSLogistics.Persistence")));
 
             // Add API endpoint exploration and Swagger
             services.AddEndpointsApiExplorer();
@@ -92,7 +98,8 @@ namespace mslogistiscs_fyp
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<DomainContext>();
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
+                //context.Database.EnsureCreated();
             }
         }
     }
