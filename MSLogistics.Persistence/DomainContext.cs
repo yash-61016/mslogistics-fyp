@@ -18,16 +18,16 @@ namespace MSLogistics.Persistence
         {
             // Define relationships
             modelBuilder.Entity<Stop>()
-                .HasOne(s => s.Route)
-                .WithMany(r => r.Stops)
-                .HasForeignKey(s => s.RouteId)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasOne<Route>()
+               .WithMany(r => r.Stops)
+               .HasForeignKey(s => s.RouteId)
+               .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Route>()
-               .HasOne(r => r.DispatchGroup) 
+               .HasOne<DispatchGroup>()
                .WithMany(d => d.Routes) 
                .HasForeignKey(r => r.DispatchGroupId) 
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.SetNull);
 
             base.OnModelCreating(modelBuilder);
         }

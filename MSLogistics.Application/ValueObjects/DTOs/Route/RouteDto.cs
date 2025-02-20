@@ -13,6 +13,8 @@ namespace MSLogistics.Application.ValueObjects.DTOs.Route
 
         public VehicleDto? Vehicle { get; set; }
 
+        public Guid? DispatchGroupId { get; set; }
+
         public List<StopDto> Stops { get; set; } = new List<StopDto>();
     }
 }

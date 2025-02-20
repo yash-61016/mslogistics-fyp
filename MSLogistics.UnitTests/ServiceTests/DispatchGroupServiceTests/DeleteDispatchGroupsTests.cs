@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MSLogistics.Application.Repositories.IDispatchGroupRepository;
+using MSLogistics.Application.Repositories.IRouteRepository;
 using MSLogistics.Application.Services.DispatchGroupService;
 using MSLogistics.Domain;
 using Xunit;
@@ -13,16 +14,18 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
 	{
         private readonly DispatchGroupService _dispatchGroupService;
         private readonly Mock<IDispatchGroupRepository> _mockDispatchGroupRepository;
+        private readonly Mock<IRouteRepository> _mockRouteRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILogger<DispatchGroupService>> _mockLogger;
 
         public DeleteDispatchGroupsTests()
         {
             _mockDispatchGroupRepository = new Mock<IDispatchGroupRepository>();
+            _mockRouteRepository = new Mock<IRouteRepository>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILogger<DispatchGroupService>>();
 
-            _dispatchGroupService = new DispatchGroupService(_mockDispatchGroupRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            _dispatchGroupService = new DispatchGroupService(_mockDispatchGroupRepository.Object, _mockRouteRepository.Object, _mockMapper.Object, _mockLogger.Object);
         }
 
         [Fact]

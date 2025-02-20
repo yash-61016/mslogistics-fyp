@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MSLogistics.Application.ValueObjects.DTOs.Route;
 
 namespace MSLogistics.Application.ValueObjects.DTOs.DispatchGroups
 {
@@ -12,6 +11,6 @@ namespace MSLogistics.Application.ValueObjects.DTOs.DispatchGroups
 
         public DateTime DispatchDate { get; set; }
 
-        public List<RouteDto> Routes { get; set; } = new List<RouteDto>();
+        public List<Guid> RoutesIds { get; set; } = new List<Guid>();
     }
 }

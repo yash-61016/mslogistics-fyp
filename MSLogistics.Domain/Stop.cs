@@ -12,7 +12,6 @@ namespace MSLogistics.Domain
         public Guid CustomerId { get; set; }
 
         public Guid? RouteId { get; set; }
-        public Route? Route { get; set; }
     }
 }
 

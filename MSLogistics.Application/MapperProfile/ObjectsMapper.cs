@@ -21,8 +21,12 @@ namespace MSLogistics.Application.MapperProfile
             CreateMap<RouteDto, Route>().ReverseMap();
 
             //DispatchGroups
-            CreateMap<DispatchGroupDto, DispatchGroup>().ReverseMap();
+            CreateMap<DispatchGroup, DispatchGroupDto>()
+                .ForMember(dest => dest.RoutesIds, opt => opt.MapFrom(src => src.Routes.Select(r => r.Id).ToList()))
+                .ReverseMap()
+                .ForMember(dest => dest.Routes, opt => opt.Ignore());
+
         }
-	}
+    }
 }
 

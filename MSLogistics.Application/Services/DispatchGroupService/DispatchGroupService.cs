@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MSLogistics.Application.Repositories.IDispatchGroupRepository;
+using MSLogistics.Application.Repositories.IRouteRepository;
 using MSLogistics.Application.ValueObjects.DTOs.DispatchGroups;
 using MSLogistics.Application.ValueObjects.Enums;
 using MSLogistics.Domain;
@@ -10,13 +11,17 @@ namespace MSLogistics.Application.Services.DispatchGroupService
 	public class DispatchGroupService : IDispatchGroupService
     {
         private readonly IDispatchGroupRepository _dispatchGroupRepository;
+        private readonly IRouteRepository _routeRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<DispatchGroupService> _logger;
 
         public DispatchGroupService(IDispatchGroupRepository dispatchGroupRepository,
-            IMapper mapper, ILogger<DispatchGroupService> logger)
+            IRouteRepository routeRepository,
+            IMapper mapper,
+            ILogger<DispatchGroupService> logger)
         {
             _dispatchGroupRepository = dispatchGroupRepository;
+            _routeRepository = routeRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -30,24 +35,23 @@ namespace MSLogistics.Application.Services.DispatchGroupService
 
             try
             {
-                // Map DispatchGroupDto to DispatchGroup
-                var dispatchGroupEntities = _mapper.Map<IEnumerable<DispatchGroup>>(dispatchGroupsList);
-
-                // Assign new IDs to each stop entity
-                foreach (var dispatchGroup in dispatchGroupEntities)
+                var dispatchGroupEntities = dispatchGroupsList.Select(dto => new DispatchGroup
                 {
-                    dispatchGroup.Id = Guid.NewGuid();
-                }
+                    Id = Guid.NewGuid(),
+                    Name = dto.Name,
+                    DispatchDate = dto.DispatchDate.ToUniversalTime(),
+                    Routes = dto.RoutesIds
+                        .Select(routeId => _routeRepository.GetByIdAsync(routeId).Result) // Fetch routes synchronously
+                        .Where(route => route != null)
+                        .ToList()
+                }).ToList();
 
-                // Attempt to add dispatch groups to the repository
                 return await _dispatchGroupRepository.AddRangeAsync(dispatchGroupEntities);
             }
             catch (Exception ex)
             {
                 _logger.LogError((int)LogEventId.DataAccessError,
-                    $"Exception was thrown while inserting a range of records of the {typeof(DispatchGroup)} type.\n" +
-                    $"Exception:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
-
+                    $"Exception while inserting DispatchGroup records: {ex.Message}\nStackTrace: {ex.StackTrace}");
                 return false;
             }
         }
@@ -98,9 +102,9 @@ namespace MSLogistics.Application.Services.DispatchGroupService
 
         public async Task<IEnumerable<DispatchGroupDto>> GetDispatchGroups()
         {
-            IEnumerable<DispatchGroup> stops = await _dispatchGroupRepository.GetAllWithIncludesAsync(group => group.Routes) ?? new List<DispatchGroup>();
+            IEnumerable<DispatchGroup> dispatchGroups = await _dispatchGroupRepository.GetAllWithIncludesAsync(group => group.Routes) ?? new List<DispatchGroup>();
 
-            IEnumerable<DispatchGroupDto> dispatchGroupDtos = _mapper.Map<IEnumerable<DispatchGroupDto>>(stops);
+            IEnumerable<DispatchGroupDto> dispatchGroupDtos = _mapper.Map<IEnumerable<DispatchGroupDto>>(dispatchGroups);
 
             return dispatchGroupDtos ?? new List<DispatchGroupDto>();
         }
@@ -114,45 +118,53 @@ namespace MSLogistics.Application.Services.DispatchGroupService
 
             try
             {
-                var dispatchGroupToUpdate = new List<DispatchGroup>();
+                var dispatchGroupsToUpdate = new List<DispatchGroup>();
 
                 foreach (var dispatchGroupDto in dispatchGroupsList)
                 {
-                    // Retrieve the existing stop by ID
-                    var existingdispatchGroup = await _dispatchGroupRepository.GetByIdAsync(dispatchGroupDto.Id);
-
-                    if (existingdispatchGroup == null)
+                    var existingDispatchGroup = await _dispatchGroupRepository.GetDispatchGroupByIdWithIncludesAsync(dispatchGroupDto.Id, group => group.Routes);
+                    if (existingDispatchGroup == null)
                     {
-                        _logger.LogError((int)LogEventId.DataAccessError, $"Dispatch group with ID {dispatchGroupDto.Id} not found for updating.");
+                        _logger.LogError($"Dispatch group with ID {dispatchGroupDto.Id} not found for updating.");
                         continue;
                     }
 
-                    // Map the new values onto the existing entity
-                    _mapper.Map(dispatchGroupDto, existingdispatchGroup);
-                    dispatchGroupToUpdate.Add(existingdispatchGroup);
+                    // Map other properties
+                    _mapper.Map(dispatchGroupDto, existingDispatchGroup);
+
+                    // Fetch each route individually and update
+                    existingDispatchGroup.Routes.Clear();
+                    foreach (var routeId in dispatchGroupDto.RoutesIds)
+                    {
+                        var route = await _routeRepository.GetByIdAsync(routeId);
+                        if (route != null)
+                        {
+                            existingDispatchGroup.Routes.Add(route);
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"Route with ID {routeId} not found. Skipping.");
+                        }
+                    }
+
+                    dispatchGroupsToUpdate.Add(existingDispatchGroup);
                 }
 
-                // If there are any vehicles to update, call UpdateRangeAsync
-                if (dispatchGroupToUpdate.Any())
+                if (dispatchGroupsToUpdate.Any())
                 {
-                    return await _dispatchGroupRepository.UpdateRangeAsync(dispatchGroupToUpdate);
+                    return await _dispatchGroupRepository.UpdateRangeAsync(dispatchGroupsToUpdate);
                 }
-                else
-                {
-                    _logger.LogError((int)LogEventId.DataAccessError, "No valid dispatch group found to update.");
-                    return false;
-                }
+
+                _logger.LogError("No valid dispatch group found to update.");
+                return false;
             }
             catch (Exception ex)
             {
-                // Log the exception details with specified format
-                _logger.LogError((int)LogEventId.DataAccessError,
-                    $"Exception was thrown while updating a range of records of the {typeof(DispatchGroup)} type.\n" +
-                    $"Exception:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
-
+                _logger.LogError($"Exception while updating DispatchGroups: {ex.Message}");
                 return false;
             }
         }
+
     }
 }
 

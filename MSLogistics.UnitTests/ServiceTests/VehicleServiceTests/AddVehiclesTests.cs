@@ -9,8 +9,8 @@ using Xunit;
 
 namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
 {
-	public class AddVehiclesTests
-	{
+    public class AddVehiclesTests
+    {
         private readonly VehicleService _vehicleService;
         private readonly Mock<IVehicleRepository> _vehicleRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
@@ -65,6 +65,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             };
 
             _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);
+            _vehicleRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(new List<Vehicle>());
             _vehicleRepositoryMock.Setup(repo => repo.AddRangeAsync(vehicleEntities)).ReturnsAsync(true);
 
             // Act
@@ -73,6 +74,37 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             // Assert
             Assert.True(result);
             _vehicleRepositoryMock.Verify(repo => repo.AddRangeAsync(vehicleEntities), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddVehicles_SkipsDuplicateVehicles_WhenRegistrationNumberExists()
+        {
+            // Arrange
+            var vehicleList = new List<VehicleDto>
+            {
+                new VehicleDto { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+            };
+
+            var existingVehicleEntities = new List<Vehicle>
+            {
+                new Vehicle { RegistrationNumber = "ABC123", LoadCapacity = 1000, VehicleModel = "Model X", VehicleMake = "Make Y" }
+            };
+
+            var vehicleEntities = new List<Vehicle>
+            {
+                new Vehicle { RegistrationNumber = "DEF456", LoadCapacity = 1500, VehicleModel = "Model Y", VehicleMake = "Make Z" }
+            };
+
+            _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);
+            _vehicleRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(existingVehicleEntities);
+            _vehicleRepositoryMock.Setup(repo => repo.AddRangeAsync(vehicleEntities)).ReturnsAsync(true);
+
+            // Act
+            var result = await _vehicleService.AddVehicles(vehicleList);
+
+            // Assert
+            Assert.True(result);
+            _vehicleRepositoryMock.Verify(repo => repo.AddRangeAsync(It.Is<List<Vehicle>>(v => v.Count == 1)), Times.Once);
         }
 
         [Fact]
@@ -90,6 +122,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             };
 
             _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);
+            _vehicleRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(new List<Vehicle>());
             _vehicleRepositoryMock.Setup(repo => repo.AddRangeAsync(vehicleEntities)).ReturnsAsync(true);
 
             // Act
@@ -117,6 +150,7 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
             };
 
             _mapperMock.Setup(m => m.Map<IEnumerable<Vehicle>>(vehicleList)).Returns(vehicleEntities);
+            _vehicleRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(new List<Vehicle>());
             _vehicleRepositoryMock.Setup(repo => repo.AddRangeAsync(vehicleEntities)).ThrowsAsync(new Exception("Database error"));
 
             // Act
@@ -138,4 +172,3 @@ namespace MSLogistics.UnitTests.ServiceTests.VehicleServiceTests
         }
     }
 }
-

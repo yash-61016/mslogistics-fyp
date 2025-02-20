@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using MSLogistics.Application.Repositories.IDispatchGroupRepository;
+using MSLogistics.Application.Repositories.IRouteRepository;
 using MSLogistics.Application.Services.DispatchGroupService;
 using MSLogistics.Application.ValueObjects.DTOs.DispatchGroups;
 using MSLogistics.Application.ValueObjects.DTOs.Route;
@@ -14,16 +15,18 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
 	{
         private readonly DispatchGroupService _dispatchGroupService;
         private readonly Mock<IDispatchGroupRepository> _mockDispatchGroupRepository;
+        private readonly Mock<IRouteRepository> _mockRouteRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILogger<DispatchGroupService>> _mockLogger;
 
         public GetDispatchGroupByIdTests()
         {
             _mockDispatchGroupRepository = new Mock<IDispatchGroupRepository>();
+            _mockRouteRepository = new Mock<IRouteRepository>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILogger<DispatchGroupService>>();
 
-            _dispatchGroupService = new DispatchGroupService(_mockDispatchGroupRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            _dispatchGroupService = new DispatchGroupService(_mockDispatchGroupRepository.Object, _mockRouteRepository.Object, _mockMapper.Object, _mockLogger.Object);
         }
 
         [Fact]
@@ -42,7 +45,7 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
             {
                 Id = dispatchGroupId,
                 Name = dispatchGroup.Name,
-                Routes = new List<RouteDto> { new RouteDto { Id = dispatchGroup.Routes.First().Id, Name = dispatchGroup.Routes.First().Name } }
+                RoutesIds = new List<Guid> { dispatchGroup.Routes.First().Id }
             };
 
             _mockDispatchGroupRepository.Setup(repo => repo.GetDispatchGroupByIdWithIncludesAsync(dispatchGroupId, group => group.Routes))
@@ -58,7 +61,7 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
             Assert.NotNull(result);
             Assert.Equal(dispatchGroupDto.Id, result.Id);
             Assert.Equal(dispatchGroupDto.Name, result.Name);
-            Assert.Equal(dispatchGroupDto.Routes.Count, result.Routes.Count);
+            Assert.Equal(dispatchGroupDto.RoutesIds.Count, result.RoutesIds.Count);
         }
 
         [Fact]
@@ -80,7 +83,7 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
             Assert.NotNull(result);
             Assert.Equal(Guid.Empty, result.Id);
             Assert.Null(result.Name);
-            Assert.Empty(result.Routes);
+            Assert.Empty(result.RoutesIds);
         }
 
         [Fact]
@@ -107,7 +110,7 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
             Assert.NotNull(result);
             Assert.Equal(Guid.Empty, result.Id);
             Assert.Null(result.Name);
-            Assert.Empty(result.Routes);
+            Assert.Empty(result.RoutesIds);
         }
 
         [Fact]
@@ -126,7 +129,7 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
             Assert.NotNull(result);
             Assert.Equal(Guid.Empty, result.Id);
             Assert.Null(result.Name);
-            Assert.Empty(result.Routes);
+            Assert.Empty(result.RoutesIds);
         }
     }
 }

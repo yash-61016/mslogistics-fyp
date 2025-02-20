@@ -12,5 +12,7 @@ namespace MSLogistics.Application.ValueObjects.DTOs.Stop
         public int Sequencenumber { get; set; }
 
         public Guid CustomerId { get; set; }
+
+        public Guid? RouteId { get; set; }
     }
 }

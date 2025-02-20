@@ -3,6 +3,8 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MSLogistics.Application.Repositories.IRouteRepository;
+using MSLogistics.Application.Repositories.IStopRepository;
+using MSLogistics.Application.Repositories.IVehicleRepository;
 using MSLogistics.Application.Services.RouteService;
 using MSLogistics.Application.ValueObjects.DTOs.Route;
 using MSLogistics.Application.ValueObjects.DTOs.Stop;
@@ -16,16 +18,20 @@ namespace MSLogistics.UnitTests.ServiceTests.RouteServiceTests
 	{
         private readonly RouteService _routeService;
         private readonly Mock<IRouteRepository> _mockRouteRepository;
+        private readonly Mock<IVehicleRepository> _mockVehicleRepository;
+        private readonly Mock<IStopRepository> _mockStopRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILogger<RouteService>> _mockLogger;
 
         public GetRouteByIdTests()
         {
             _mockRouteRepository = new Mock<IRouteRepository>();
+            _mockVehicleRepository = new Mock<IVehicleRepository>();
+            _mockStopRepository = new Mock<IStopRepository>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILogger<RouteService>>();
 
-            _routeService = new RouteService(_mockRouteRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            _routeService = new RouteService(_mockRouteRepository.Object, _mockVehicleRepository.Object, _mockStopRepository.Object, _mockMapper.Object, _mockLogger.Object);
         }
 
         [Fact]

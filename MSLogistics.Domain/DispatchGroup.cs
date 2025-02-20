@@ -15,6 +15,6 @@ namespace MSLogistics.Domain
             set => _dispatchDate = value.ToUniversalTime();
         }
 
-        public IEnumerable<Route>? Routes { get; set; } = new List<Route>();
+        public ICollection<Route>? Routes { get; set; } = new List<Route>();
     }
 }

@@ -12,8 +12,7 @@ namespace MSLogistics.Domain
         public Vehicle? Vehicle { get; set; }
 
         public Guid? DispatchGroupId { get; set; }
-        public DispatchGroup? DispatchGroup { get; set; }
 
-        public IEnumerable<Stop> Stops { get; set; } = new List<Stop>();
+        public ICollection<Stop> Stops { get; set; } = new List<Stop>();
 	}
 }

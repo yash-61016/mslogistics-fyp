@@ -30,17 +30,41 @@ namespace MSLogistics.Application.Services.VehicleService
 
             try
             {
-                // Map VehicleDto to Vehicle
+                // Map VehicleDto to Vehicle entities
                 var vehicleEntities = _mapper.Map<IEnumerable<Vehicle>>(vehicleList);
 
-                // Assign new IDs to each vehicle entity
+                // Get all existing vehicles
+                var existingVehicles = await _vehicleRepository.GetAllAsync();
+
+                var vehiclesToAdd = new List<Vehicle>();
+
+                // Loop through each vehicle and check for duplicate registration number
                 foreach (var vehicle in vehicleEntities)
                 {
-                    vehicle.Id = Guid.NewGuid();
+                    // Check if a vehicle with the same registration number already exists
+                    if (!existingVehicles.Any(existingVehicle => existingVehicle.RegistrationNumber == vehicle.RegistrationNumber))
+                    {
+                        // If the vehicle doesn't exist, add it to the list to be inserted
+                        vehicle.Id = Guid.NewGuid(); // Assign a new ID
+                        vehiclesToAdd.Add(vehicle);
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"Vehicle with registration number {vehicle.RegistrationNumber} already exists, skipping...");
+                    }
                 }
 
-                // Attempt to add vehicles to the repository
-                return await _vehicleRepository.AddRangeAsync(vehicleEntities);
+                // If no valid vehicles to add, return false
+                if (!vehiclesToAdd.Any())
+                {
+                    _logger.LogInformation("No new vehicles to add. All vehicles already exist.");
+                    return false;
+                }
+
+                // Attempt to add valid vehicles to the repository
+                await _vehicleRepository.AddRangeAsync(vehiclesToAdd);
+
+                return true;
             }
             catch (Exception ex)
             {

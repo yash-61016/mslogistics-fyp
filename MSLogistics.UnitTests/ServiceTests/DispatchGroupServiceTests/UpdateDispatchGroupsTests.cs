@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MSLogistics.Application.Repositories.IDispatchGroupRepository;
+using MSLogistics.Application.Repositories.IRouteRepository;
 using MSLogistics.Application.Services.DispatchGroupService;
 using MSLogistics.Application.ValueObjects.DTOs.DispatchGroups;
 using MSLogistics.Domain;
@@ -13,16 +15,18 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
 	{
         private readonly DispatchGroupService _dispatchGroupService;
         private readonly Mock<IDispatchGroupRepository> _mockDispatchGroupRepository;
+        private readonly Mock<IRouteRepository> _mockRouteRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILogger<DispatchGroupService>> _mockLogger;
 
         public UpdateDispatchGroupsTests()
         {
             _mockDispatchGroupRepository = new Mock<IDispatchGroupRepository>();
+            _mockRouteRepository = new Mock<IRouteRepository>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILogger<DispatchGroupService>>();
 
-            _dispatchGroupService = new DispatchGroupService(_mockDispatchGroupRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            _dispatchGroupService = new DispatchGroupService(_mockDispatchGroupRepository.Object, _mockRouteRepository.Object, _mockMapper.Object, _mockLogger.Object);
         }
 
         [Fact]
@@ -105,15 +109,21 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
         public async Task UpdateDispatchGroups_ShouldReturnTrue_WhenDispatchGroupsUpdatedSuccessfully()
         {
             // Arrange
-            var dispatchGroupDto = new DispatchGroupDto { Id = Guid.NewGuid() };
-            var dispatchGroup = new DispatchGroup { Id = dispatchGroupDto.Id };
+            var routeId = Guid.NewGuid();
+            var dispatchGroupDto = new DispatchGroupDto { Id = Guid.NewGuid(), RoutesIds = new List<Guid> { routeId } };
+            var existingRoute = new Route { Id = routeId };
+            var existingDispatchGroup = new DispatchGroup { Id = dispatchGroupDto.Id, Routes = new List<Route>() };
 
             _mockDispatchGroupRepository
-                .Setup(repo => repo.GetByIdAsync(dispatchGroupDto.Id))
-                .ReturnsAsync(dispatchGroup);
+                .Setup(repo => repo.GetDispatchGroupByIdWithIncludesAsync(dispatchGroupDto.Id, It.IsAny<Expression<Func<DispatchGroup, object>>>()))
+                .ReturnsAsync(existingDispatchGroup);
+
+            _mockRouteRepository
+                .Setup(repo => repo.GetByIdAsync(routeId))
+                .ReturnsAsync(existingRoute);
 
             _mockMapper
-                .Setup(mapper => mapper.Map(dispatchGroupDto, dispatchGroup))
+                .Setup(mapper => mapper.Map(dispatchGroupDto, existingDispatchGroup))
                 .Verifiable();
 
             _mockDispatchGroupRepository
@@ -127,18 +137,19 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
             Assert.True(result);
             _mockMapper.Verify();
             _mockDispatchGroupRepository.Verify(repo => repo.UpdateRangeAsync(It.IsAny<List<DispatchGroup>>()), Times.Once);
+            _mockRouteRepository.Verify(repo => repo.GetByIdAsync(routeId), Times.Once);
         }
 
         [Fact]
         public async Task UpdateDispatchGroups_ShouldReturnFalse_WhenRepositoryThrowsException()
         {
             // Arrange
-            var dispatchGroupDto = new DispatchGroupDto { Id = Guid.NewGuid() };
-            var dispatchGroup = new DispatchGroup { Id = dispatchGroupDto.Id };
+            var dispatchGroupDto = new DispatchGroupDto { Id = Guid.NewGuid(), RoutesIds = new List<Guid>() };
+            var existingDispatchGroup = new DispatchGroup { Id = dispatchGroupDto.Id, Routes = new List<Route>() };
 
             _mockDispatchGroupRepository
-                .Setup(repo => repo.GetByIdAsync(dispatchGroupDto.Id))
-                .ReturnsAsync(dispatchGroup);
+                .Setup(repo => repo.GetDispatchGroupByIdWithIncludesAsync(dispatchGroupDto.Id, It.IsAny<Expression<Func<DispatchGroup, object>>>()))
+                .ReturnsAsync(existingDispatchGroup);
 
             _mockDispatchGroupRepository
                 .Setup(repo => repo.UpdateRangeAsync(It.IsAny<List<DispatchGroup>>()))
@@ -154,13 +165,14 @@ namespace MSLogistics.UnitTests.ServiceTests.DispatchGroupServiceTests
                 l => l.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Exception was thrown while updating a range of records")),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Exception while updating DispatchGroups")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception, string>>()
                 ),
                 Times.Once
             );
         }
+
     }
 }
 
