@@ -34,34 +34,6 @@ namespace MSLogistics.UnitTests.ServiceTests.RouteServiceTests
         }
 
         [Fact]
-        public async Task UpdateRoutes_ShouldReturnTrue_WhenRoutesAreUpdatedSuccessfully()
-        {
-            // Arrange
-            var routeDtos = new List<RouteDto>
-            {
-                new RouteDto { Id = Guid.NewGuid(), Name = "Updated Route A", Vehicle = new VehicleDto { Id = Guid.NewGuid(), VehicleModel = "Updated Model A" } }
-            };
-
-            var existingRoute = new Route { Id = routeDtos[0].Id, Name = "Old Route A", VehicleId = routeDtos[0].Vehicle.Id };
-
-            _mockRouteRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(existingRoute);
-
-            _mockMapper.Setup(m => m.Map(It.IsAny<RouteDto>(), It.IsAny<Route>()))
-                .Callback<RouteDto, Route>((routeDto, route) => route.Name = routeDto.Name); // Simulate mapping
-
-            _mockRouteRepository.Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<Route>>()))
-                .ReturnsAsync(true);
-
-            // Act
-            var result = await _routeService.UpdateRoutes(routeDtos);
-
-            // Assert
-            Assert.True(result); // Ensure the result is true when routes are updated
-            _mockRouteRepository.Verify(repo => repo.UpdateRangeAsync(It.Is<IEnumerable<Route>>(r => r.Count() == 1)), Times.Once);
-        }
-
-        [Fact]
         public async Task UpdateRoutes_ShouldReturnFalse_WhenRoutesListIsNull()
         {
             // Act
@@ -81,34 +53,6 @@ namespace MSLogistics.UnitTests.ServiceTests.RouteServiceTests
             Assert.False(result); // Ensure the result is false when routes list is empty
         }
 
-        [Fact]
-        public async Task UpdateRoutes_ShouldReturnFalse_WhenExistingRouteNotFound()
-        {
-            // Arrange
-            var routeDtos = new List<RouteDto>
-            {
-                new RouteDto { Id = Guid.NewGuid(), Name = "Route A" }
-            };
-
-            _mockRouteRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync((Route)null); // Simulate route not found
-
-            // Act
-            var result = await _routeService.UpdateRoutes(routeDtos);
-
-            // Assert
-            Assert.False(result); // Ensure the result is false when route does not exist
-            _mockLogger.Verify(
-               l => l.Log(
-                   LogLevel.Error,
-               It.IsAny<EventId>(),
-                   It.Is<It.IsAnyType>((v, t) => v.ToString().Contains($"Failed to retrive existing route for updating from database.")),
-                   It.IsAny<Exception>(),
-                   It.IsAny<Func<It.IsAnyType, Exception, string>>()
-               ),
-               Times.Once
-           );
-        }
 
         [Fact]
         public async Task UpdateRoutes_ShouldReturnFalse_WhenNoValidRoutesToUpdate()
@@ -147,10 +91,10 @@ namespace MSLogistics.UnitTests.ServiceTests.RouteServiceTests
             // Arrange
             var routeDtos = new List<RouteDto>
             {
-                new RouteDto { Id = Guid.NewGuid(), Name = "Route A" }
+                new RouteDto { Id = Guid.NewGuid(), Name = "Route A", Stops = new List<StopDto>() }
             };
 
-            var existingRoute = new Route { Id = routeDtos[0].Id, Name = "Route A" };
+            var existingRoute = new Route { Id = routeDtos[0].Id, Name = "Route A", Stops = new List<Stop>() };
 
             _mockRouteRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingRoute);
@@ -167,13 +111,100 @@ namespace MSLogistics.UnitTests.ServiceTests.RouteServiceTests
                l => l.Log(
                    LogLevel.Error,
                    It.IsAny<EventId>(),
-                   It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Exception was thrown while updating a range of records")),
+                   It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Exception occurred while updating routes.")),
                    It.IsAny<Exception>(),
                    It.IsAny<Func<It.IsAnyType, Exception, string>>()
                ),
                Times.Once
            );
         }
+
+        [Fact]
+        public async Task UpdateRoutes_ShouldReturnTrue_WhenRoutesAreUpdatedSuccessfully()
+        {
+            // Arrange
+            var vehicleId = Guid.NewGuid();
+            var routeId = Guid.NewGuid();
+
+            var routeDtos = new List<RouteDto>
+            {
+                new RouteDto
+                {
+                    Id = routeId,
+                    Name = "Updated Route A",
+                    Vehicle = new VehicleDto { Id = vehicleId, VehicleModel = "Updated Model A" },
+                    Stops = new List<StopDto>() // Ensure Stops is initialized
+                }
+            };
+
+            var existingRoute = new Route
+            {
+                Id = routeId,
+                Name = "Old Route A",
+                VehicleId = vehicleId,
+                Stops = new List<Stop>()
+            };
+
+            var vehicle = new Vehicle { Id = vehicleId, VehicleModel = "Old Model A" };
+
+            _mockRouteRepository.Setup(repo => repo.GetByIdAsync(routeId))
+                .ReturnsAsync(existingRoute);
+
+            _mockVehicleRepository.Setup(repo => repo.GetByIdAsync(vehicleId))
+                .ReturnsAsync(vehicle); // Mock fetching the vehicle
+
+            _mockMapper.Setup(m => m.Map(It.IsAny<RouteDto>(), It.IsAny<Route>()))
+                .Callback<RouteDto, Route>((routeDto, route) =>
+                {
+                    route.Name = routeDto.Name;
+                    route.VehicleId = routeDto.Vehicle.Id;
+                });
+
+            _mockRouteRepository.Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<Route>>()))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await _routeService.UpdateRoutes(routeDtos);
+
+            // Assert
+            Assert.True(result); // Ensure the result is true when routes are updated
+
+            _mockRouteRepository.Verify(repo => repo.UpdateRangeAsync(It.Is<IEnumerable<Route>>(r =>
+                r.Count() == 1 &&
+                r.First().Name == "Updated Route A" &&
+                r.First().VehicleId == vehicleId)), Times.Once);
+        }
+
+
+        [Fact]
+        public async Task UpdateRoutes_ShouldReturnFalse_WhenExistingRouteNotFound()
+        {
+            // Arrange
+            var routeDtos = new List<RouteDto>
+            {
+                new RouteDto { Id = Guid.NewGuid(), Name = "Route A", Stops = new List<StopDto>() }
+            };
+
+            _mockRouteRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync((Route)null); // Simulate route not found
+
+            // Act
+            var result = await _routeService.UpdateRoutes(routeDtos);
+
+            // Assert
+            Assert.False(result); // Ensure the result is false when route does not exist
+            _mockLogger.Verify(
+               l => l.Log(
+                   LogLevel.Error,
+                   It.IsAny<EventId>(),
+                   It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Route with ID")),
+                   It.IsAny<Exception>(),
+                   It.IsAny<Func<It.IsAnyType, Exception, string>>()
+               ),
+               Times.Once
+           );
+        }
+
     }
 }
 
